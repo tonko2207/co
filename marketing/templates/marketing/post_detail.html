@@ -1,0 +1,32 @@
+{% extends "animals/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'marketing:post_list' %}" class="btn btn-secondary btn-sm mb-3">← Wróć</a>
+
+<h1 class="mb-2">{{ post.title }}</h1>
+<div class="text-muted mb-3">
+    {{ post.get_post_type_display }} • {{ post.published_at|date:"Y-m-d H:i" }}
+</div>
+
+{% if post.image %}
+<img src="{{ post.image.url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
+{% endif %}
+
+{% if post.lead %}
+<p class="lead">{{ post.lead }}</p>
+{% endif %}
+
+<div style="white-space: pre-wrap;">{{ post.body }}</div>
+
+{% if post.animal %}
+<hr>
+<div class="alert alert-light">
+    Powiązane zwierzę:
+    <a href="{% url 'animal_detail' post.animal.id_zwierzecia %}">
+        {{ post.animal.imie }} (#{{ post.animal.id_zwierzecia }})
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

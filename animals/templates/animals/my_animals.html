@@ -1,0 +1,21 @@
+{% extends "animals/base.html" %}
+
+{% block title %}Moi podopieczni{% endblock %}
+
+{% block content %}
+<h1>Moi podopieczni</h1>
+
+{% if animals %}
+<ul class="list-group">
+    {% for animal in animals %}
+    <li class="list-group-item">
+        {{ animal.imie }} – {{ animal.gatunek }} ({{ animal.rasa|default:"-" }})
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-info">
+    Brak przypisanych zwierząt.
+</div>
+{% endif %}
+{% endblock %}

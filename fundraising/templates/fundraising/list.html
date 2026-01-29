@@ -1,0 +1,46 @@
+{% extends "animals/base.html" %}
+{% block title %}Zbiórki{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">💰 Zbiórki schroniska</h2>
+            <p class="text-muted mb-0">Wybierz zbiórkę, aby zobaczyć szczegóły.</p>
+        </div>
+
+        {% if user.is_staff %}
+        <a class="btn btn-success" href="{% url 'fundraising:create' %}">
+            ➕ Utwórz nową zbiórkę
+        </a>
+        {% endif %}
+
+    </div>
+
+    {% if fundraisers %}
+    <div class="list-group">
+        {% for f in fundraisers %}
+        <a class="list-group-item list-group-item-action"
+           href="{% url 'fundraising:detail' f.slug %}">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <b>{{ f.title }}</b><br>
+                    <small class="text-muted">
+                        Cel: {{ f.goal_amount }} PLN •
+                        Zebrano: {{ f.collected_amount }} PLN
+                    </small>
+                </div>
+                <span class="badge bg-primary">Szczegóły</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-3">
+        Brak aktywnych zbiórek.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

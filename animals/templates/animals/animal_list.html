@@ -1,0 +1,125 @@
+{% extends "animals/base.html" %}
+{% block title %}Lista zwierząt{% endblock %}
+
+{% block content %}
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label class="form-label">Wiek</label>
+        <input type="number"
+               name="wiek"
+               class="form-control"
+               placeholder="np. 3"
+               value="{{ selected_wiek|default:'' }}">
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Rasa</label>
+        <select name="rasa" class="form-select">
+            <option value="">-- wszystkie --</option>
+            {% for r in rasy %}
+            <option value="{{ r }}" {% if r and r == selected_rasa %}selected{% endif %}>
+                {{ r }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">
+            Filtruj
+        </button>
+        <a href="{% url 'animal_list' %}" class="btn btn-secondary">
+            Wyczyść
+        </a>
+    </div>
+</form>
+
+<h1 class="mb-4">Lista zwierząt</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    {% if perms.animals.add_animal %}
+    <a href="{% url 'animal_create' %}" class="btn btn-primary">
+        Dodaj nowe zwierzę
+    </a>
+    {% endif %}
+    <span class="text-muted">
+        Znaleziono {{ animals|length }} zwierząt
+    </span>
+</div>
+
+{% if animals %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for animal in animals %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+
+            {% if animal.zdjecie %}
+            <img src="{{ animal.zdjecie.url }}"
+                 class="card-img-top"
+                 alt="Zdjęcie {{ animal.imie }}"
+                 style="object-fit: cover; height: 260px;">
+            {% else %}
+            <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                 style="height: 260px;">
+                <span class="text-muted">Brak zdjęcia</span>
+            </div>
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title mb-1">
+                    <a href="{% url 'animal_detail' animal.id_zwierzecia %}"
+                       class="text-decoration-none">
+                        {{ animal.imie }}
+                    </a>
+                    <small class="text-muted">
+                        #{{ animal.id_zwierzecia }}
+                    </small>
+                </h5>
+
+
+                <p class="mb-1">
+                    <strong>Gatunek:</strong> {{ animal.gatunek }}
+                </p>
+                <p class="mb-1">
+                    <strong>Rasa:</strong> {{ animal.rasa|default:"–" }}
+                </p>
+                <p class="mb-1">
+                    <strong>Status:</strong> {{ animal.get_status_display }}
+                </p>
+
+                {% if animal.data_przyjecia %}
+                <p class="mb-0 text-muted">
+                    Przyjęty: {{ animal.data_przyjecia }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                <a href="{% url 'animal_detail' animal.id_zwierzecia %}"
+                   class="btn btn-sm btn-outline-primary me-2">
+                    Szczegóły / historia
+                </a>
+                {% if perms.animals.change_animal %}
+                <a href="{% url 'animal_update' animal.id_zwierzecia %}"
+                   class="btn btn-sm btn-outline-secondary">
+                    Edytuj
+                </a>
+                {% endif %}
+                <a href="{% url 'toggle_favorite' animal.id_zwierzecia %}?next={{ request.get_full_path }}"
+                   class="btn btn-sm btn-outline-warning">
+                    Ulubione
+                </a>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    Brak zwierząt w bazie.
+</div>
+{% endif %}
+
+{% endblock %}

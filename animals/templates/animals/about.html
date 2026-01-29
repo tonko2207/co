@@ -1,0 +1,57 @@
+{% extends "animals/base.html" %}
+
+{% block title %}O schronisku{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">O schronisku</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>📍 Lokalizacja</h4>
+        <p>
+            Schronisko dla Zwierząt<br>
+            ul. Przykładowa 12<br>
+            00-000 Warszawa
+        </p>
+
+        <div class="ratio ratio-4x3">
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=21.0000%2C52.2200%2C21.0300%2C52.2400&amp;layer=mapnik&amp;marker=52.2300%2C21.0150"
+                    style="border:1px solid #ccc"
+                    allowfullscreen
+                    loading="lazy">
+            </iframe>
+        </div>
+
+        <small class="text-muted">
+            <a href="https://www.openstreetmap.org/?mlat=52.2300&mlon=21.0150#map=15/52.2300/21.0150"
+               target="_blank">
+                Zobacz na pełnej mapie
+            </a>
+        </small>
+    </div>
+
+    <div class="col-md-6">
+        <h4>🕒 Godziny otwarcia</h4>
+        <table class="table table-bordered mt-3">
+            <tr>
+                <th>Poniedziałek – Piątek</th>
+                <td>10:00 – 18:00</td>
+            </tr>
+            <tr>
+                <th>Sobota</th>
+                <td>10:00 – 14:00</td>
+            </tr>
+            <tr>
+                <th>Niedziela</th>
+                <td>Nieczynne</td>
+            </tr>
+        </table>
+
+        <h4 class="mt-4">📞 Kontakt</h4>
+        <p>
+            Telefon: <strong>123 456 789</strong><br>
+            E-mail: <strong>kontakt@schronisko.pl</strong>
+        </p>
+    </div>
+</div>
+{% endblock %}

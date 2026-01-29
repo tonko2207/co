@@ -1,0 +1,76 @@
+{% extends "animals/base.html" %}
+{% block title %}Szybki samouczek{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+
+    <h1 class="mb-2">👋 Witaj w systemie schroniska!</h1>
+    <p class="text-muted">
+        To krótki samouczek (1 minuta). Pokaże Ci, gdzie co jest i jak zacząć.
+    </p>
+
+    <hr class="my-4">
+
+    <h5>✅ Krok 1: Lista zwierząt</h5>
+    <p>
+        Wejdź w <b>Lista zwierząt</b> (menu u góry). Zobaczysz wszystkie zwierzęta dostępne w schronisku.
+        Możesz używać filtrów (np. rasa / wiek), aby szybciej znaleźć to, czego szukasz.
+    </p>
+
+    <h5 class="mt-4">✅ Krok 2: Szczegóły zwierzęcia</h5>
+    <p>
+        Kliknij wybrane zwierzę na liście – otworzy się strona ze szczegółami (opis, zdjęcia, informacje).
+        To najlepsze miejsce, żeby poznać historię i potrzeby zwierzaka.
+    </p>
+
+    <h5 class="mt-4">✅ Krok 3: Ulubione ❤️</h5>
+    <p>
+        Jeśli jakieś zwierzę Cię interesuje, dodaj je do <b>Ulubionych</b>.
+        Dzięki temu szybko wrócisz do niego później (bez szukania od nowa).
+    </p>
+
+    <h5 class="mt-4">✅ Krok 4: Aktualności / Marketing 📰</h5>
+    <p>
+        W zakładce <b>Aktualności</b> znajdziesz wpisy o wydarzeniach, akcjach i ogłoszeniach schroniska.
+        To tutaj pojawiają się np. informacje o nowych zwierzętach, zbiórkach czy adopcjach.
+    </p>
+
+    <h5 class="mt-4">✅ Krok 5: Zbiórki (Fundraising) 💰</h5>
+    <p>
+        W zakładce <b>Zbiórki</b> możesz przeglądać aktywne zbiórki schroniska i zobaczyć szczegóły.
+        Na stronie zbiórki możesz też wykonać <b>wpłatę</b> (zapis w systemie).
+    </p>
+
+    {% if user.is_staff %}
+    <div class="alert alert-warning mt-3">
+        <b>Dla administracji (staff):</b><br>
+        • Na liście zbiórek zobaczysz przycisk <b>➕ Utwórz nową zbiórkę</b><br>
+        • W szczegółach zbiórki zobaczysz przycisk <b>✏️ Edytuj zbiórkę</b>
+    </div>
+    {% else %}
+    <div class="alert alert-secondary mt-3">
+        <b>Uwaga:</b> tworzenie i edycja zbiórek jest dostępne tylko dla użytkowników administracyjnych (staff).
+    </div>
+    {% endif %}
+
+    <h5 class="mt-4">✅ Krok 6: Funkcje dla opiekuna 👤</h5>
+    <p>
+        Jeżeli jesteś <b>opiekunem</b>, możesz mieć dodatkowe opcje zarządzania swoimi podopiecznymi
+        (np. edycja informacji, status, notatki).
+    </p>
+
+    <hr class="my-4">
+
+    <div class="alert alert-info mb-4">
+        <b>Tip:</b> Jeśli coś się “zgubi” — wróć do <b>Listy zwierząt</b>. To jest główny ekran startowy systemu.
+    </div>
+
+    <form method="post" action="{% url 'core:onboarding_complete' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">
+            Rozumiem – przejdź do systemu
+        </button>
+    </form>
+
+</div>
+{% endblock %}

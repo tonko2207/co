@@ -1,0 +1,30 @@
+{% extends "animals/base.html" %}
+{% block title %}
+    {% if mode == "edit" %}Edytuj zbiórkę{% else %}Utwórz zbiórkę{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <h2 class="mb-3">
+        {% if mode == "edit" %}
+        ✏️ Edytuj zbiórkę
+        {% else %}
+        ➕ Utwórz nową zbiórkę
+        {% endif %}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="btn btn-success">
+            {% if mode == "edit" %}Zapisz zmiany{% else %}Utwórz{% endif %}
+        </button>
+
+        <a class="btn btn-outline-secondary"
+           href="{% url 'fundraising:list' %}">
+            Anuluj
+        </a>
+    </form>
+</div>
+{% endblock %}

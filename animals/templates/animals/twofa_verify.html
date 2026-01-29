@@ -1,0 +1,17 @@
+{% extends "animals/base.html" %}
+{% block title %}Weryfikacja 2FA{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Weryfikacja 2FA</h1>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="post" class="card p-3 shadow-sm" style="max-width: 420px;">
+    {% csrf_token %}
+    <label class="form-label">Kod z aplikacji Authenticator</label>
+    <input class="form-control" name="token" placeholder="np. 123456" required>
+    <button class="btn btn-success mt-3" type="submit">Zweryfikuj</button>
+</form>
+{% endblock %}

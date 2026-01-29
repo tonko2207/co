@@ -1,0 +1,22 @@
+{% extends "animals/base.html" %}
+{% block title %}Konfiguracja 2FA{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Konfiguracja 2FA (Weterynarz)</h1>
+
+<p>Otworz aplikacje Authenticator i zeskanuj kod QR:</p>
+
+<div class="mb-3">
+    <img alt="QR code" style="max-width: 280px; height: auto;"
+         src="data:image/png;base64,{{ qr_b64 }}">
+</div>
+
+<div class="alert alert-secondary">
+    <strong>Awaryjnie (gdy QR nie dziala):</strong><br>
+    Dodaj recznie konto w aplikacji i uzyj ponizszego linku/sekretu.
+</div>
+
+<pre style="white-space: pre-wrap;">{{ config_url }}</pre>
+
+<a class="btn btn-primary" href="{% url 'twofa_verify' %}">Dalej: wpisz kod</a>
+{% endblock %}

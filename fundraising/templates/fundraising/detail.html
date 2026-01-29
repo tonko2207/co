@@ -1,0 +1,62 @@
+{% extends "animals/base.html" %}
+{% block title %}Zbiórka{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h2 class="mb-1">💰 {{ fundraiser.title }}</h2>
+            <p class="text-muted mb-0">
+                Cel: <b>{{ fundraiser.goal_amount }} PLN</b> • Zebrano: <b>{{ fundraiser.collected_amount }} PLN</b>
+            </p>
+        </div>
+
+        {% if user.is_staff %}
+        <a href="{% url 'fundraising:edit' fundraiser.slug %}"
+           class="btn btn-outline-warning">
+            ✏️ Edytuj
+        </a>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <p>{{ fundraiser.description|linebreaks }}</p>
+
+    {% if fundraiser.is_ended %}
+    <div class="alert alert-warning">Ta zbiórka jest zakończona.</div>
+    {% endif %}
+
+    <hr>
+
+    <h5>Wpłać (zapis do systemu)</h5>
+
+    {% if messages %}
+    {% for m in messages %}
+    <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-2">
+            <label class="form-label">Kwota (PLN)</label>
+            <input class="form-control" name="amount" placeholder="np. 20.00">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Imię (opcjonalnie)</label>
+            <input class="form-control" name="donor_name" placeholder="np. Jan">
+        </div>
+
+        <button class="btn btn-success" {% if fundraiser.is_ended %}disabled{% endif %}>
+            Wpłać
+        </button>
+
+        <a class="btn btn-outline-secondary" href="{% url 'fundraising:list' %}">
+            Powrót
+        </a>
+    </form>
+
+</div>
+{% endblock %}

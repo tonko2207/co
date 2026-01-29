@@ -1,0 +1,12 @@
+{% extends "animals/base.html" %}
+
+{% block title %}Brak uprawnieñ{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+    <h4 class="alert-heading">Brak uprawnieñ</h4>
+    <p>Nie masz uprawnieñ do wykonania tej operacji.</p>
+    <hr>
+    <a class="btn btn-secondary" href="{% url 'animal_list' %}">Wróæ</a>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "animals/base.html" %}
+
+{% block title %}
+    {% if mode == 'edit' %}Edytuj{% else %}Dodaj{% endif %} zwierzę
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    {% if mode == 'edit' %}Edytuj{% else %}Dodaj{% endif %} zwierzę
+</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">
+                Zapisz
+            </button>
+            <a href="{% url 'animal_list' %}" class="btn btn-secondary ms-2">
+                Wróć do listy
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

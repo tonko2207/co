@@ -1,0 +1,37 @@
+{% extends "animals/base.html" %}
+{% block title %}Ulubione{% endblock %}
+
+{% block content %}
+<<<<<<< HEAD
+<h1 class="mb-4">Ulubione zwierzêta</h1>
+=======
+<h1 class="mb-4">Ulubione zwierzęta</h1>
+>>>>>>> aa8f4bb (Wprowadzenie poprawek w formularzach i modyfikacja danych o zwierzętach.)
+
+{% if animals %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for animal in animals %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url 'animal_detail' animal.id_zwierzecia %}" class="text-decoration-none">
+                        {{ animal.imie }}
+                    </a>
+                </h5>
+                <p class="mb-1"><strong>Rasa:</strong> {{ animal.rasa|default:"–" }}</p>
+                <p class="mb-1"><strong>Wiek:</strong> {{ animal.wiek|default:"–" }}</p>
+
+                <a class="btn btn-sm btn-outline-danger mt-2"
+                   href="{% url 'toggle_favorite' animal.id_zwierzecia %}?next={{ request.path }}">
+                    Usuñ z ulubionych
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">Nie masz jeszcze ulubionych.</div>
+{% endif %}
+{% endblock %}

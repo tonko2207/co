@@ -1,0 +1,47 @@
+{% extends "animals/base.html" %}
+
+{% block title %}Dokumentacja medyczna{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dokumentacja medyczna</h1>
+
+<div class="mb-3">
+    <a href="{% url 'animal_detail' animal.id_zwierzecia %}" class="btn btn-secondary btn-sm">
+        ← Wróć do szczegółów
+    </a>
+    <a href="{% url 'medical_document_add' animal.id_zwierzecia %}" class="btn btn-success btn-sm">
+        + Dodaj dokument
+    </a>
+</div>
+
+<p class="text-muted">
+    Zwierzę: <strong>{{ animal.imie }}</strong> (#{{ animal.id_zwierzecia }})
+</p>
+
+{% if documents %}
+<div class="list-group">
+    {% for d in documents %}
+    <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <strong>{{ d.title }}</strong>
+                {% if d.document_date %}
+                <div class="text-muted"><small>Data: {{ d.document_date }}</small></div>
+                {% endif %}
+            </div>
+            <a class="btn btn-outline-primary btn-sm" href="{{ d.file.url }}" target="_blank">
+                Otwórz / pobierz
+            </a>
+        </div>
+
+        {% if d.notes %}
+        <div class="mt-2 text-muted"><small>{{ d.notes }}</small></div>
+        {% endif %}
+        <div class="mt-1 text-muted"><small>Dodano: {{ d.uploaded_at|date:"Y-m-d H:i" }}</small></div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">Brak dokumentów.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "animals/base.html" %}
+{% block title %}Usuń post{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Usuń post</h1>
+
+<div class="alert alert-warning">
+    Czy na pewno chcesz usunąć: <strong>{{ post.title }}</strong>?
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger">Tak, usuń</button>
+    <a class="btn btn-secondary" href="{% url 'marketing:manage_posts' %}">Anuluj</a>
+</form>
+{% endblock %}

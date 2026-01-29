@@ -1,0 +1,36 @@
+{% extends "animals/base.html" %}
+{% block title %}Panel marketingu{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Panel marketingu</h1>
+
+<a href="{% url 'marketing:post_create' %}" class="btn btn-primary mb-3">
+    + Dodaj wpis
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Typ</th>
+            <th>Status</th>
+            <th>Publikacja</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in posts %}
+        <tr>
+            <td>{{ p.title }}</td>
+            <td>{{ p.get_post_type_display }}</td>
+            <td>{{ p.get_status_display }}</td>
+            <td>{% if p.published_at %}{{ p.published_at|date:"Y-m-d H:i" }}{% else %}-{% endif %}</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'marketing:post_update' p.pk %}">Edytuj</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'marketing:post_delete' p.pk %}">Usuń</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

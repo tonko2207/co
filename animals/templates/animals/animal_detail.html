@@ -1,0 +1,183 @@
+{% extends "animals/base.html" %}
+
+{% block title %}Szczegóły zwierzaka{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Szczegóły zwierzaka</h1>
+
+<div class="mb-3">
+    <a href="{% url 'animal_list' %}" class="btn btn-secondary btn-sm">
+        ← Wróć do listy
+    </a>
+    {% if user.is_authenticated and user.groups.all %}
+    {% if perms.animals.change_animal %}
+    <a href="{% url 'animal_update' animal.id_zwierzecia %}" class="btn btn-primary btn-sm">
+        Edytuj
+    </a>
+    {% endif %}
+    {% endif %}
+    {% if perms.animals.add_medicalvisit %}
+    <a href="{% url 'medical_visit_create' animal.id_zwierzecia %}" class="btn btn-success btn-sm">
+        + Dodaj wizytę medyczną
+    </a>
+    {% endif %}
+    {% if perms.animals.view_medicaldocument %}
+    <a href="{% url 'medical_documents_list' animal.id_zwierzecia %}" class="btn btn-info btn-sm">
+        Dokumentacja medyczna
+    </a>
+    {% endif %}
+
+    {% if perms.animals.add_medicaldocument %}
+    <a href="{% url 'medical_document_add' animal.id_zwierzecia %}" class="btn btn-success btn-sm">
+        + Dodaj dokument
+    </a>
+    {% endif %}
+
+
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        {% if animal.zdjecie %}
+        <img src="{{ animal.zdjecie.url }}"
+             alt="Zdjęcie {{ animal.imie }}"
+             class="img-fluid rounded mb-3"
+             style="object-fit: cover; max-height: 300px;">
+        {% else %}
+        <div class="bg-light d-flex align-items-center justify-content-center rounded mb-3"
+             style="height: 300px;">
+            <span class="text-muted">Brak zdjęcia</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-8">
+        <h3>{{ animal.imie }} <small class="text-muted">#{{ animal.id_zwierzecia }}</small></h3>
+
+        <p><strong>Gatunek:</strong> {{ animal.gatunek }}</p>
+        <p><strong>Rasa:</strong> {{ animal.rasa|default:"–" }}</p>
+        <p><strong>Status:</strong> {{ animal.get_status_display }}</p>
+
+        {% if animal.data_przyjecia %}
+        <p><strong>Data przyjęcia:</strong> {{ animal.data_przyjecia }}</p>
+        {% endif %}
+        {% if animal.wiek %}
+        <p><strong>Wiek:</strong> {{ animal.wiek }} lat</p>
+        {% endif %}
+        {% if animal.stan_zdrowia %}
+        <p><strong>Stan zdrowia:</strong> {{ animal.stan_zdrowia }}</p>
+        {% endif %}
+        {% if animal.opis_charakteru %}
+        <p><strong>Charakter:</strong> {{ animal.opis_charakteru }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<hr>
+
+{% if user.is_authenticated and user.groups.all %}
+    {% if user.groups.all.0.name == "Opiekun zwierząt" %}
+<form method="post" action="{% url 'assign_to_me' animal.id_zwierzecia %}">
+    {% csrf_token %}
+    <button class="btn btn-success mb-3">
+        🐾 Przypisz mnie jako opiekuna
+    </button>
+</form>
+            {% else %}
+<div class="alert alert-info">
+    Opiekun: <strong>{{ animal.opiekun.username }}</strong>
+</div>
+    {% endif %}
+{% endif %}
+
+<hr>
+
+<h3 class="mt-4 mb-3">Wizyty medyczne</h3>
+
+{% with visits=animal.medical_visits.all %}
+  {% if visits %}
+<div class="list-group">
+    {% for v in visits %}
+    <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <strong>{{ v.visit_date }}</strong>
+            {% if v.cost %}<span class="text-muted">{{ v.cost }} zł</span>{% endif %}
+        </div>
+
+        {% if v.vet_name %}<div><strong>Lekarz:</strong> {{ v.vet_name }}</div>{% endif %}
+        {% if v.reason %}<div><strong>Powód:</strong> {{ v.reason }}</div>{% endif %}
+        {% if v.diagnosis %}<div><strong>Diagnoza:</strong> {{ v.diagnosis }}</div>{% endif %}
+        {% if v.treatment %}<div><strong>Leczenie:</strong> {{ v.treatment }}</div>{% endif %}
+        {% if v.notes %}<div class="text-muted"><small>{{ v.notes }}</small></div>{% endif %}
+        {% if v.next_visit_date %}
+        <div class="mt-2"><small class="text-muted">Następna wizyta: {{ v.next_visit_date }}</small></div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+  {% else %}
+<p class="text-muted">Brak wizyt medycznych.</p>
+  {% endif %}
+{% endwith %}
+
+
+<hr>
+<h3 class="mt-4 mb-3">Dokumentacja medyczna</h3>
+
+{% with docs=animal.medical_documents.all %}
+  {% if docs %}
+<ul class="list-group mb-3">
+    {% for d in docs|slice:":5" %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <strong>{{ d.title }}</strong>
+            {% if d.document_date %}
+            <div class="text-muted"><small>{{ d.document_date }}</small></div>
+            {% endif %}
+        </div>
+        <a href="{{ d.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+            Otwórz
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'medical_documents_list' animal.id_zwierzecia %}" class="btn btn-sm btn-outline-info">
+    Zobacz wszystkie dokumenty
+</a>
+  {% else %}
+<p class="text-muted">Brak dokumentów medycznych.</p>
+  {% endif %}
+{% endwith %}
+
+<hr>
+
+
+<h3 class="mt-4 mb-3">Historia zwierzaka</h3>
+
+{% if history %}
+<ul class="list-group">
+    {% for entry in history %}
+    <li class="list-group-item">
+        <strong>{{ entry.timestamp|date:"Y-m-d H:i" }}</strong><br>
+        {{ entry.action }}
+        {% if entry.old_status or entry.new_status %}
+        <br>
+        <small class="text-muted">
+            {% if entry.old_status %}
+            Stary status: {{ entry.old_status }}
+            {% endif %}
+            {% if entry.new_status %}
+            {% if entry.old_status %} → {% endif %}
+            Nowy status: {{ entry.new_status }}
+            {% endif %}
+        </small>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">Brak wpisów w historii.</p>
+{% endif %}
+
+{% endblock %}
